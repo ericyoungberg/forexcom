@@ -19,7 +19,7 @@ import threading
 import traceback
 from functools import partial
 
-from forexcom.utils import send_request
+from .utils import send_request
 
 CONNECTION_URL_PATH = "lightstreamer/create_session.txt"
 BIND_URL_PATH = "lightstreamer/bind_session.txt"

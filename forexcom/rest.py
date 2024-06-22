@@ -5,8 +5,8 @@ from operator import itemgetter
 
 import pandas as pd
 
-from forexcom.exceptions import ForexException
-from forexcom.utils import send_request
+from .exceptions import ForexException
+from .utils import send_request
 
 from .models import Currency, InstructionStatus, Order, OrderStatus, OrderType, Position
 
