@@ -80,6 +80,15 @@ class RestClient:
         except Exception as e:
             raise ForexException(res) from e
 
+    def get_account_margin(self, client_account_id):
+        log.debug('Getting account margin')
+        res = self._get(f"/margin/clientAccountMargin?clientAccountId={client_account_id}", headers=self._default_headers)
+
+        try:
+            return res
+        except Exception as e:
+            raise ForexException(res) from e
+
     def get_symbol_detail(self, symbol):
         """
         :param symbol: symbol (e.g. EUR/USD)
