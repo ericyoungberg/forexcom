@@ -2,11 +2,14 @@ import logging
 import re
 from functools import partial
 from operator import itemgetter
+from urllib import parse
+
+from pprint import pprint
 
 import pandas as pd
 
 from .exceptions import ForexException
-from .utils import send_request
+from .utils import send_request, encode_params
 
 from .models import Currency, InstructionStatus, Order, OrderStatus, OrderType, Position
 
@@ -88,6 +91,24 @@ class RestClient:
             return res
         except Exception as e:
             raise ForexException(res) from e
+
+    def list_open_positions(self, client_account_id=None, trading_account_id=None):
+        log.debug('Listing open positions')
+
+        query_params = encode_params({
+            'clientAccountId': client_account_id,
+            'tradingAccountId': trading_account_id,
+        })
+
+        pprint(query_params)
+
+        res = self._get(f"/openpositions?{query_params}", headers=self._default_headers)
+
+        try:
+            return res
+        except Exception as e:
+            raise ForexException(res) from e
+
 
     def get_symbol_detail(self, symbol):
         """
@@ -214,6 +235,7 @@ class RestClient:
         symbol: str,
         position: Position,
         offer_price: float,
+        bid_price: float,
         quantity: int,
     ):
         log.debug('create trade %s %s %s %s %s', trading_account_id, symbol, position, offer_price, quantity)
@@ -227,6 +249,7 @@ class RestClient:
                 'Direction': position.name.lower(),
                 'Quantity': quantity,
                 'OfferPrice': offer_price,
+                'BidPrice': bid_price,
             },
             headers=self._default_headers,
         )
