@@ -92,6 +92,24 @@ class RestClient:
         except Exception as e:
             raise ForexException(res) from e
 
+    def list_active_orders(self, client_account_id=None, trading_account_id=None):
+        log.debug('Listing open positions')
+
+        query_params = encode_params({
+            'clientAccountId': client_account_id,
+            'tradingAccountId': trading_account_id,
+        })
+
+        pprint(f"/activeorders?{query_params}")
+
+        res = self._get(f"/order/activeorders?{query_params}", headers=self._default_headers)
+
+        try:
+            return res
+        except Exception as e:
+            raise ForexException(res) from e
+
+
     def list_open_positions(self, client_account_id=None, trading_account_id=None):
         log.debug('Listing open positions')
 
@@ -100,9 +118,7 @@ class RestClient:
             'tradingAccountId': trading_account_id,
         })
 
-        pprint(query_params)
-
-        res = self._get(f"/openpositions?{query_params}", headers=self._default_headers)
+        res = self._get(f"/order/openpositions?{query_params}", headers=self._default_headers)
 
         try:
             return res
