@@ -244,6 +244,33 @@ class RestClient:
         except Exception as e:
             raise ForexException(res) from e
 
+    def order_stop_limit(
+        self,
+        order_id: int,
+        symbol: str,
+        position: Position,
+        trigger_price: float,
+        offer_price: float,
+        bid_price: float,
+        quantity: int,
+        trading_account_id: int,
+    ):
+        symbol_id = self.get_symbol_id(symbol)
+        res = self._post(
+            '/order/newstoplimitorder',
+            params={
+                'MarketName': symbol,
+                'MarketId': symbol_id,
+                'Direction': position.name.lower(),
+                'Quantity': quantity,
+                'TriggerPrice': trigger_price,
+                'OfferPrice': offer_price,
+                'BidPrice': bid_price,
+                'TradingAccountId': trading_account_id,
+            },
+            headers=self._default_headers,
+        )
+
     def order_market_price(
         self,
         client_account_id: int,
